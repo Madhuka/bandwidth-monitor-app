@@ -3,7 +3,115 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/highcharts/highcharts.js"></script>
+    <script src="/node_modules/highcharts/highcharts-more.js"></script>
+    <script src="/node_modules/highcharts/modules/exporting.js"></script>
+
     <script type="text/javascript">
+        $(function() {
+            var chart = new Highcharts.Chart({
+
+                    chart: {
+                        renderTo: 'container',
+                        type: 'gauge',
+                        alignTicks: false,
+                        plotBackgroundColor: null,
+                        plotBackgroundImage: null,
+                        plotBorderWidth: 0,
+                        plotShadow: false
+                    },
+
+                    title: {
+                        text: 'Speedometer with dual axes'
+                    },
+
+                    pane: {
+                        startAngle: -150,
+                        endAngle: 150
+                    },
+
+                    yAxis: [{
+                        min: 0,
+                        max: 200,
+                        lineColor: '#339',
+                        tickColor: '#339',
+                        minorTickColor: '#339',
+                        offset: -25,
+                        lineWidth: 2,
+                        labels: {
+                            distance: -20,
+                            rotation: 'auto'
+                        },
+                        tickLength: 5,
+                        minorTickLength: 5,
+                        endOnTick: false
+                    }, {
+                        min: 0,
+                        max: 124,
+                        tickPosition: 'outside',
+                        lineColor: '#933',
+                        lineWidth: 2,
+                        minorTickPosition: 'outside',
+                        tickColor: '#933',
+                        minorTickColor: '#933',
+                        tickLength: 5,
+                        minorTickLength: 5,
+                        labels: {
+                            distance: 12,
+                            rotation: 'auto'
+                        },
+                        offset: -20,
+                        endOnTick: false
+                    }],
+
+                    series: [{
+                        name: 'Speed',
+                        data: [80],
+                        dataLabels: {
+                            formatter: function() {
+                                var kmh = this.y,
+                                    mph = Math.round(kmh * 0.621);
+                                return '<span style="color:#339">' + kmh + ' km/h</span><br/>' +
+                                    '<span style="color:#933">' + mph + ' mph</span>';
+                            },
+                            backgroundColor: {
+                                linearGradient: {
+                                    x1: 0,
+                                    y1: 0,
+                                    x2: 0,
+                                    y2: 1
+                                },
+                                stops: [
+                                    [0, '#DDD'],
+                                    [1, '#FFF']
+                                ]
+                            }
+                        },
+                        tooltip: {
+                            valueSuffix: ' km/h'
+                        }
+                    }]
+
+                },
+                // Add some life
+                function(chart) {
+                    setInterval(function() {
+                        var point = chart.series[0].points[0],
+                            newVal, inc = Math.round((Math.random() - 0.5) * 20);
+
+                        newVal = point.y + inc;
+                        if (newVal < 0 || newVal > 200) {
+                            newVal = point.y - inc;
+                        }
+
+                        point.update(newVal);
+
+                    }, 3000);
+
+                });
+        });
+
         function test(filename) {
             console.log("----------My Speed - console ----------");
             var xhr = new XMLHttpRequest();
@@ -25,7 +133,14 @@
             }
 
             function printRecord(loaded, total, duration) {
-                console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + (loaded / (1048576)) / (duration / 1000) + ' MB/s| ');
+                speed = (loaded / (1048576)) / (duration / 1000);
+                console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' MB/s| ');
+
+                chart = $('#container').highcharts();
+                point = chart.series[0].points[0];
+                point.update(Math.round(speed * 100) / 100);
+
+
             }
 
             function transferComplete(evt) {
@@ -42,7 +157,7 @@
     <button onclick="test('ZipFile.zip')">Files One</button>
     <button onclick="test('ZipFile1.zip')">Files Two</button>
     <button onclick="test('ZipFile2.zip')">Files Three</button>
-    <div id="console_div"></div>
+    <div id="container" style="width: 400px; height: 300px; margin: 0 auto"></div>
 </body>
 
 </html>
