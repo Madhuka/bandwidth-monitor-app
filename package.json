@@ -1,0 +1,21 @@
+{
+    "version": "0.0.1",
+    "name": "network-bandwidth-monitoring-tool",
+    "description": "This application for is to test network bandwidth speed",
+    "repository": "-",
+    "license": "MIT",
+    "author": "madhuka@nic.lk>",
+    "devDependencies": {
+        "http-server": "^0.6.1"
+    },
+    "dependencies": {
+        "jquery": "^2.2.1",
+        "font-awesome": "^4.5.0",
+        "bootstrap": "^3.3.6",
+        "mysql": "^2.5.4"
+    },
+    "scripts": {
+        "prestart": "npm install",
+        "start": "http-server -a 0.0.0.0 -p 8010"
+    }
+}
