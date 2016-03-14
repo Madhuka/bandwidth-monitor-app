@@ -10,12 +10,11 @@
 
     <script type="text/javascript">
         $(function() {
-            var chart = new Highcharts.Chart({
+
+            $('#container').highcharts({
 
                     chart: {
-                        renderTo: 'container',
                         type: 'gauge',
-                        alignTicks: false,
                         plotBackgroundColor: null,
                         plotBackgroundImage: null,
                         plotBorderWidth: 0,
@@ -23,58 +22,19 @@
                     },
 
                     title: {
-                        text: 'Speedometer with dual axes'
+                        text: 'Network Speedometer'
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
                     },
 
                     pane: {
                         startAngle: -150,
-                        endAngle: 150
-                    },
-
-                    yAxis: [{
-                        min: 0,
-                        max: 200,
-                        lineColor: '#339',
-                        tickColor: '#339',
-                        minorTickColor: '#339',
-                        offset: -25,
-                        lineWidth: 2,
-                        labels: {
-                            distance: -20,
-                            rotation: 'auto'
-                        },
-                        tickLength: 5,
-                        minorTickLength: 5,
-                        endOnTick: false
-                    }, {
-                        min: 0,
-                        max: 124,
-                        tickPosition: 'outside',
-                        lineColor: '#933',
-                        lineWidth: 2,
-                        minorTickPosition: 'outside',
-                        tickColor: '#933',
-                        minorTickColor: '#933',
-                        tickLength: 5,
-                        minorTickLength: 5,
-                        labels: {
-                            distance: 12,
-                            rotation: 'auto'
-                        },
-                        offset: -20,
-                        endOnTick: false
-                    }],
-
-                    series: [{
-                        name: 'Speed',
-                        data: [80],
-                        dataLabels: {
-                            formatter: function() {
-                                var kmh = this.y,
-                                    mph = Math.round(kmh * 0.621);
-                                return '<span style="color:#339">' + kmh + ' km/h</span><br/>' +
-                                    '<span style="color:#933">' + mph + ' mph</span>';
-                            },
+                        endAngle: 150,
+                        background: [{
                             backgroundColor: {
                                 linearGradient: {
                                     x1: 0,
@@ -83,32 +43,87 @@
                                     y2: 1
                                 },
                                 stops: [
-                                    [0, '#DDD'],
+                                    [0, '#FFF'],
+                                    [1, '#333']
+                                ]
+                            },
+                            borderWidth: 0,
+                            outerRadius: '109%'
+                        }, {
+                            backgroundColor: {
+                                linearGradient: {
+                                    x1: 0,
+                                    y1: 0,
+                                    x2: 0,
+                                    y2: 1
+                                },
+                                stops: [
+                                    [0, '#333'],
                                     [1, '#FFF']
                                 ]
-                            }
+                            },
+                            borderWidth: 1,
+                            outerRadius: '107%'
+                        }, {
+                            // default background
+                        }, {
+                            backgroundColor: '#DDD',
+                            borderWidth: 0,
+                            outerRadius: '105%',
+                            innerRadius: '103%'
+                        }]
+                    },
+
+                    // the value axis
+                    yAxis: {
+                        min: 0,
+                        max: 100,
+
+                        minorTickInterval: 'auto',
+                        minorTickWidth: 1,
+                        minorTickLength: 10,
+                        minorTickPosition: 'inside',
+                        minorTickColor: '#666',
+
+                        tickPixelInterval: 30,
+                        tickWidth: 2,
+                        tickPosition: 'inside',
+                        tickLength: 10,
+                        tickColor: '#666',
+                        labels: {
+                            step: 2,
+                            rotation: 'auto'
                         },
+                        title: {
+                            text: 'km/h'
+                        },
+                        plotBands: [{
+                            from: 0,
+                            to: 60,
+                            color: '#55BF3B' // green
+                        }, {
+                            from: 60,
+                            to: 80,
+                            color: '#DDDF0D' // yellow
+                        }, {
+                            from: 80,
+                            to: 100,
+                            color: '#DF5353' // red
+                        }]
+                    },
+
+                    series: [{
+                        name: 'NetworkSpeed',
+                        data: [0],
                         tooltip: {
-                            valueSuffix: ' km/h'
+                            valueSuffix: ' MB/s'
                         }
                     }]
 
                 },
-                // Add some life
+                // Add speedometer to life
                 function(chart) {
-                    setInterval(function() {
-                        var point = chart.series[0].points[0],
-                            newVal, inc = Math.round((Math.random() - 0.5) * 20);
-
-                        newVal = point.y + inc;
-                        if (newVal < 0 || newVal > 200) {
-                            newVal = point.y - inc;
-                        }
-
-                        point.update(newVal);
-
-                    }, 3000);
-
+                    if (!chart.renderer.forExport) {}
                 });
         });
 
@@ -117,6 +132,7 @@
             var xhr = new XMLHttpRequest();
             xhr.addEventListener("progress", updateProgress);
             xhr.addEventListener("load", transferComplete);
+            var startTime = new Date().getTime();
             xhr.open('GET', './' + filename, true);
             console.log("Speed By Megabyte Per Second");
 
@@ -133,20 +149,23 @@
             }
 
             function printRecord(loaded, total, duration) {
-                speed = (loaded / (1048576)) / (duration / 1000);
-                console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' MB/s| ');
+                if (duration > 0) {
+                    speed = (loaded / (1048576)) / (duration / 1000);
+                    console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' MB/s| ');
 
-                chart = $('#container').highcharts();
-                point = chart.series[0].points[0];
-                point.update(Math.round(speed * 100) / 100);
-
+                    chart = $('#container').highcharts();
+                    point = chart.series[0].points[0];
+                    point.update(Math.round(speed * 100) / 100);
+                } else {
+                    //starting phase
+                }
 
             }
 
             function transferComplete(evt) {
                 console.log("The transfer is complete.");
             }
-            var startTime = new Date().getTime();
+
             xhr.send();
         };
     </script>
