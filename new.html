@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	
+<script type="text/javascript">
+//chart start
+
+      function drawChart(x) {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['File', parseInt(x)],
+          ['Network', 50]
+        ]);
+
+        var options = {
+          width: 600, height: 180,
+          redFrom: 80, redTo: 100,
+          yellowFrom:60, yellowTo: 80,
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+        setInterval(function() {
+          data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
+          chart.draw(data, options);
+        }, 130);
+        setInterval(function() {
+          data.setValue(0, 1, parseInt(x)*100 );
+          chart.draw(data, options);
+        }, 500);
+      }
+//chart end
+
+google.charts.load('current', {'packages':['gauge']});
+function test(){
+
+console.log("@@");
+      
+      
+var xhr = new XMLHttpRequest();
+
+//xhr.open('GET', './BnS_Mal_Pan_Podak.mp3', true);
+xhr.addEventListener("progress", updateProgress);
+xhr.addEventListener("load", transferComplete);
+xhr.open('GET', './BnS_Mal_Pan_Podak.mp3', true);
+
+console.log("@sad@");
+// progress on transfers from the server to the client (downloads)
+function updateProgress (oEvent) {
+  if (oEvent.lengthComputable) {
+    var percentComplete = oEvent.loaded / oEvent.total;
+	console.log(percentComplete);
+	google.charts.setOnLoadCallback(drawChart(percentComplete));
+
+    // ...
+  } else {
+    // Unable to compute progress information since the total size is unknown
+  }
+}
+
+function transferComplete(evt) {
+  console.log("The transfer is complete.");
+}
+xhr.send();
+};
+</script>
+ 
+</head>
+	<body>
+		<button onclick="test()">Test</button>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+       <div id="chart_div" style="width: 400px; height: 120px;"></div>
+	</body>
+</html>
