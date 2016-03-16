@@ -9,18 +9,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Network Bandwidth Monitoring Tool</title>
+    <title>My Speed</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link href="css/grayscale.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <!-- Custom CSS 
+    <link href="/node_modules/bootstrap/dist/css/heroic-features.css" rel="stylesheet"> -->
+    <link href="/css/speed.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,32 +24,46 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- jQuery -->
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="/node_modules/highcharts/highcharts.js"></script>
+    <script src="/node_modules/highcharts/highcharts-more.js"></script>
+    <script src="/node_modules/highcharts/modules/exporting.js"></script>
+    <script src="/js/net-speed.js"></script>
+
 
 </head>
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
-                    <i class="fa fa-bars"></i>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">
-                    <i class="fa fa-play-circle"></i>  <span class="light">My</span> Speed
-                </a>
+                <a class="navbar-brand" href="#myspeed">My Speed</a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
-                    <li class="hidden">
-                        <a href="#page-top"></a>
+                    <li>
+                        <a href="#about">About</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">About</a>
+                        <a href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a href="#contact">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -62,55 +72,61 @@
         <!-- /.container -->
     </nav>
 
-    <!-- Intro Header -->
-    <header class="intro">
-        <div class="intro-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <h1 class="brand-heading">My Speed</h1>
-                        <p id="status">JavaScript is turned off or block, or your browser need to be updated</p>
-                        <a href="#about" class="btn btn-circle page-scroll">
-                            <i class="fa fa-angle-double-down animated"></i>
-                        </a>
-                    </div>
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Jumbotron Header -->
+        <header class="jumbotron hero-spacer">
+            <h1>My Speed!</h1>
+            <p>My Speed is a Web Application that checks the Network Bandwidth.</p>
+            <!--p>
+                <button class="btn btn-primary btn-large" onclick="test('ZipFile.zip')">Files One</button>
+                <button class="btn btn-primary btn-large" onclick="test('ZipFile1.zip')">Files Two</button>
+                <button class="btn btn-primary btn-large" onclick="test('ZipFile2.zip')">Files Three</button>
+            </p-->
+        </header>
+
+        <hr>
+
+        <!-- Title -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Speedometer</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Page Features -->
+        <div class="row text-center">
+
+            <div class="col-md-6 col-sm-6 hero-feature">
+                <div class="imagewrap">
+                    <img class="img-responsive" src="./img/world-map.jpg">
+
+                    <button type="button" class="btn btn-info button1" onclick="test('ZipFile.zip')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-info button2" onclick="test('ZipFile1.zip')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-info button3" onclick="test('ZipFile2.zip')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <!-- About Section -->
-    <section id="about" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>About My Speed</h2>
-                <p>My Speed is simple Web application that check network bandwidth speed.</p>
-                <p>Your connection speed is given in BPS (Bit per second), bPS (byte per second), KBPS (Kilobit per second) and MBPS (Megabit per second).</p>
+            <div class="col-md-6 col-sm-6 hero-feature">
+                <div id="container" style="width: 400px; height: 300px; margin: 0 auto"></div>
             </div>
+
         </div>
-    </section>
+        <!-- /.row -->
+        <hr>
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; 2016</p>
+                </div>
+            </div>
+        </footer>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container text-center">
-            <p>Copyright &copy; 2016</p>
-        </div>
-    </footer>
-
-    <!-- jQuery -->
-    <script src="/node_modules/jquery/dist/jquery.js"></script>
-    <script src="js/speed.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="js/jquery.easing.min.js"></script>
-   
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/grayscale.js"></script>
-    <!--IP track js-->
-    <script src="http://l2.io/ip.js?var=myip"></script>
+    </div>
+    <!-- /.container -->
 
 </body>
 
