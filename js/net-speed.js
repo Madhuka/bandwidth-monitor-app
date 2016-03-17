@@ -123,6 +123,49 @@ $(function() {
         });
 });
 
+function testURL() {
+console.log("----------Test URL ----------");
+    var xhr = new XMLHttpRequest();
+	xhr.setRequestHeader( 'Access-Control-Allow-Origin', 'origin');
+    xhr.addEventListener("progress", updateProgress);
+    xhr.addEventListener("load", transferComplete);
+    var startTime = new Date().getTime();
+    xhr.open('GET', 'http://us.speedtest.trc.gov.lk/TRCSL/10MB.zip', true);
+    xhr.send();
+	
+	
+    // progress on transfers from the server to the client (downloads)
+    function updateProgress(oEvent) {
+        if (oEvent.lengthComputable) {
+            var percentComplete = oEvent.loaded / oEvent.total;
+            var now = new Date().getTime();
+            var duration = now - startTime;
+            printRecord(oEvent.loaded, oEvent.total, duration);
+        } else {
+            // Unable to compute progress information since the total size is unknown
+        }
+    }
+
+    function printRecord(loaded, total, duration) {
+        if (duration > 0) {
+            speed = (loaded / (1048576)) / (duration / 1000);
+            console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' MB/s| ');
+
+            chart = $('#container').highcharts();
+            point = chart.series[0].points[0];
+            point.update(Math.round(speed * 100) / 100);
+        } else {
+            //starting phase
+        }
+
+    }
+
+    function transferComplete(evt) {
+        console.log("The transfer is complete.");
+    }
+	
+}
+
 function test(filename) {
     console.log("----------My Speed - console ----------");
     var xhr = new XMLHttpRequest();

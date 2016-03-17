@@ -17,6 +17,6 @@
     },
     "scripts": {
         "prestart": "npm install",
-        "start": "http-server -a 0.0.0.0 -p 8010"
+        "start": "http-server -a 0.0.0.0 -p 8080"
     }
 }
