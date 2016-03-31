@@ -2,44 +2,35 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>My Speed</title>
-
     <!-- Bootstrap Core CSS -->
     <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom CSS 
-    <link href="/node_modules/bootstrap/dist/css/heroic-features.css" rel="stylesheet"> -->
+            <link href="/node_modules/bootstrap/dist/css/heroic-features.css" rel="stylesheet"> -->
     <link href="/css/speed.css" rel="stylesheet">
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+        <![endif]-->
     <!-- jQuery -->
     <script src="/node_modules/jquery/dist/jquery.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-
     <script src="/node_modules/highcharts/highcharts.js"></script>
     <script src="/node_modules/highcharts/highcharts-more.js"></script>
     <script src="/node_modules/highcharts/modules/exporting.js"></script>
+    <script src="/js/config.js"></script>
     <script src="/js/net-speed.js"></script>
-
-
 </head>
 
 <body>
-
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
@@ -51,13 +42,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#myspeed">My Speed</a>
+                <a class="navbar-brand" onclick="loaddashboard()">My Speed</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#about">About</a>
+                        <a onclick="show('about')">About</a>
                     </li>
                     <li>
                         <a href="#services">Services</a>
@@ -71,47 +62,36 @@
         </div>
         <!-- /.container -->
     </nav>
-
     <!-- Page Content -->
     <div class="container">
-
         <!-- Jumbotron Header -->
         <header class="jumbotron hero-spacer">
-            <h1>My Speed!</h1>
-            <p>My Speed is a Web Application that checks the Network Bandwidth.</p>
-            <!--p>
-                <button class="btn btn-primary btn-large" onclick="testURL()">URL One</button>
-                <button class="btn btn-primary btn-large" onclick="test('ZipFile1.zip')">Files Two</button>
-                <button class="btn btn-primary btn-large" onclick="test('ZipFile2.zip')">Files Three</button>
-            </p-->
-        </header>
-
-        <hr>
-
-        <!-- Title -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h3>Speedometer</h3>
-            </div>
-        </div>
-        <!-- /.row -->
-
-        <!-- Page Features -->
-        <div class="row text-center">
-
-            <div class="col-md-6 col-sm-6 hero-feature">
-                <div class="imagewrap">
-                    <img class="img-responsive" src="./img/world-map.jpg">
-
-                    <button type="button" class="btn btn-info button1" onclick="test('ZipFile.zip')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
-                    <button type="button" class="btn btn-info button2" onclick="test('ZipFile1.zip')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
-                    <button type="button" class="btn btn-info button3" onclick="test('ZipFile2.zip')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>
+            <div class="row">
+                <div class="col-lg-2">
+                    <img src="/img/log.png" class="img-responsive" alt="Cinque Terre">
+                </div>
+                <div class="col-lg-10">
+                    <h1>My Speed!</h1>
+                    <h3>This web application will calculate your network speed.</h3>
+                    <font size=2>*Please note that these tests will consume your monthly data capacity</font>
                 </div>
             </div>
-
-            <div class="col-md-6 col-sm-6 hero-feature">
-                <div id="container" style="width: 400px; height: 300px; margin: 0 auto"></div>
-            </div>
+            <!--p>
+                    <button class="btn btn-primary btn-large" onclick="testURL()">URL One</button>
+                    <button class="btn btn-primary btn-large" onclick="test('ZipFile1.zip')">Files Two</button>
+                    <button class="btn btn-primary btn-large" onclick="test('ZipFile2.zip')">Files Three</button>
+                    </p-->
+        </header>
+        <!-- Title -->
+        <!-------
+            <div class="row">
+                <div class="col-lg-12">
+                <p>*Please note that these tests will consume your monthly data capacity</p>
+                </div>
+            </div>---->
+        <!-- /.row -->
+        <!-- Page Features -->
+        <div id="pagefeature" class="row text-center">
 
         </div>
         <!-- /.row -->
@@ -119,15 +99,13 @@
         <!-- Footer -->
         <footer>
             <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; 2016.</p>
+                <div id="copyrights" class="col-lg-12">
+                    <p align=center>Copyright &copy; 2016</p>
                 </div>
             </div>
         </footer>
-
     </div>
     <!-- /.container -->
-
 </body>
 
 </html>
