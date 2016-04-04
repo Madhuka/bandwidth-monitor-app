@@ -142,8 +142,8 @@ function getDetails() {
     $.getJSON("http://ip-api.com/json",
         function(data) {
             isp = data.isp;
-            console.log(isp);
-            $("#msgbar").append(', and ISP is ' + isp);
+            //console.log(isp);
+            $("#msgbar").append('<br>Internet service provider: ' + isp);
 
         });
 
@@ -154,7 +154,7 @@ function getip() {
 }
 
 function testURL() {
-    console.log("----------Test URL ----------");
+    //console.log("----------Test URL ----------");
     var xhr = new XMLHttpRequest();
     //xhr.setRequestHeader('Access-Control-Allow-Origin', 'origin');
     xhr.addEventListener("progress", updateProgress);
@@ -178,7 +178,7 @@ function testURL() {
     function printRecord(loaded, total, duration) {
         if (duration > 0) {
             speed = ((loaded * 8) / (1048576)) / (duration / 1000);
-            console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' Mbps| ');
+            //console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' Mbps| ');
             chart = $('#container').highcharts();
             point = chart.series[0].points[0];
             point.update(Math.round(speed * 100) / 100);
@@ -188,11 +188,22 @@ function testURL() {
 
     }
 
+
+
     function transferComplete(evt) {
-        console.log("The transfer is complete.");
+        //console.log("The transfer is complete.");
     }
 
 }
+
+    function setMeterZero() {
+            chart = $('#container').highcharts();
+            point = chart.series[0].points[0];
+            point.update(0);
+
+
+
+    }
 
 function show(name) {
     $('#pagefeature').html('');
@@ -211,11 +222,14 @@ function loaddashboard() {
     });
 
 }
+var filelocation = null;
+function test(filename,location) {
+filelocation = location;
+setMeterZero();
 
-function test(filename) {
     var d = new Date();
     var n = d.getTime();
-    console.log("----------My Speed - console ----------");
+    //console.log("----------My Speed - console ----------");
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("progress", updateProgress);
     xhr.addEventListener("load", transferComplete);
@@ -238,6 +252,7 @@ function test(filename) {
 
     function printRecord(loaded, total, duration) {
         resetProgressBar();
+
         if (duration > 0) {
             $('button').prop('disabled', true);
             downloadPrecentage = Math.round((loaded / total) * 100)
@@ -267,19 +282,22 @@ function test(filename) {
     }
 
     function resetProgressBar() {
+         
         $("#msgbar").hide();
         $("#msgbar").html('..')
         $('.progress-bar').attr('class', 'progress-bar progress-bar-default progress-bar-striped');
         $('.progress-bar').attr('style', 'width:' + 0 + '%');
         $('.progress-bar').text('0% Downloading... ')
+    
+
     }
 
     function transferComplete(evt) {
         console.log("The transfer is complete.");
-        $('.progress-bar').text('File is Fully Downloaded, Your Network BandWidth Speed is ' + mySpeed + ' Mbps');
+        $('.progress-bar').text('File Download Completed');
         $('button').prop('disabled', false);
         $("#msgbar").show();
-        $("#msgbar").html('<strong>You Speed is ' + mySpeed + ' Mbps!</strong> Your IP is ' + getip() + '<br>Tested Time is ' + getDateTime());
+        $("#msgbar").html('<strong>Your Speed is ' + mySpeed + ' Mbps!</strong><br>Your IP address: ' + getip() + '<br>Date and Time of Test:' + getDateTime()+'<br>Download Server Location :'+filelocation);
         getDetails();
         $('.progress-bar').attr('class', 'progress-bar progress-bar-success progress-bar-striped');
 
