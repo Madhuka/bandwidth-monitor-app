@@ -234,7 +234,9 @@ setMeterZero();
     xhr.addEventListener("progress", updateProgress);
     xhr.addEventListener("load", transferComplete);
     var startTime = new Date().getTime();
-    xhr.open('GET', './' + filename + '?' + n, true);
+	filename  = $('input[name=optradio]:checked').val() + 'M' + filename
+	console.log(filename);
+    xhr.open('GET', './DownloadFile/' + filename + '?' + n, true);
     console.log("Speed By Megabits Per Second");
 
     // progress on transfers from the server to the client (downloads)
@@ -260,7 +262,6 @@ setMeterZero();
             console.log(loaded + ' bytes | ' + total + ' bytes | ' + Math.round((loaded / total) * 100) + '% Downloaded | ' + speed + ' Mbps| ');
 
             chart = $('#container').highcharts();
-            point = chart.series[0].points[0];
             mySpeed = Math.round(speed * 100) / 100
             point.update(mySpeed);
 
@@ -294,10 +295,13 @@ setMeterZero();
 
     function transferComplete(evt) {
         console.log("The transfer is complete.");
+		var testedfilesize = $('input[name=optradio]:checked').val();
         $('.progress-bar').text('File Download Completed');
         $('button').prop('disabled', false);
         $("#msgbar").show();
-        $("#msgbar").html('<strong>Your Speed is ' + mySpeed + ' Mbps!</strong><br>Your IP address: ' + getip() + '<br>Date and Time of Test:' + getDateTime()+'<br>Download Server Location :'+filelocation);
+        point = chart.series[0].points[0];
+		point.update(0);
+        $("#msgbar").html('<strong>Your Speed is ' + mySpeed + ' Mbps!</strong><br>Your IP address: ' + getip() + '<br>Date and Time of Test: ' + getDateTime()+'<br>Download Server Location: '+filelocation+'<br>Tested File Size: ' + testedfilesize + 'MB');
         getDetails();
         $('.progress-bar').attr('class', 'progress-bar progress-bar-success progress-bar-striped');
 
