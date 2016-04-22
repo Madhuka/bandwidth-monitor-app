@@ -10,7 +10,7 @@ function drawingchart() {
             },
 
             title: {
-                text: 'Network Speedometer'
+                text: ''
             },
             credits: {
                 enabled: false
@@ -153,6 +153,7 @@ function getip() {
     return (myip);
 }
 
+
 function testURL() {
     //console.log("----------Test URL ----------");
     var xhr = new XMLHttpRequest();
@@ -160,7 +161,10 @@ function testURL() {
     xhr.addEventListener("progress", updateProgress);
     xhr.addEventListener("load", transferComplete);
     var startTime = new Date().getTime();
-    xhr.open('GET', 'http://us.speedtest.trc.gov.lk/TRCSL/10MB.zip', true);
+    //xhr.open('GET', 'http://eu.speedtest.trc.gov.lk/TRCSL/10MB.zip', true);
+	//http://localhost:3000/
+	var url = 'http://localhost:3001/';
+	xhr.open('GET', url, true);
     xhr.send();
 
     // progress on transfers from the server to the client (downloads)
@@ -191,7 +195,8 @@ function testURL() {
 
 
     function transferComplete(evt) {
-        //console.log("The transfer is complete.");
+        console.log("The transfer is complete.");
+		console.log(evt);
     }
 
 }
@@ -301,7 +306,7 @@ setMeterZero();
         $("#msgbar").show();
         point = chart.series[0].points[0];
 		point.update(0);
-        $("#msgbar").html('<strong>Your Speed is ' + mySpeed + ' Mbps!</strong><br>Your IP address: ' + getip() + '<br>Date and Time of Test: ' + getDateTime()+'<br>Download Server Location: '+filelocation+'<br>Tested File Size: ' + testedfilesize + 'MB');
+        $("#msgbar").html('<strong>Your Speed is ' + mySpeed + ' Mbps</strong><br>Your IP address: ' + getip() + '<br>Date and Time of Test: ' + getDateTime()+'<br>Download Server Location: '+filelocation+'<br>Tested File Size: ' + testedfilesize + 'MB');
         getDetails();
         $('.progress-bar').attr('class', 'progress-bar progress-bar-success progress-bar-striped');
 
