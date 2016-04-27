@@ -2,3 +2,9 @@
 .button1 {position:absolute;bottom:65%;left:20%;}
 .button2 {position:absolute;bottom:45%;right:3%;}
 .button3 {position:absolute;right:30%;top:20%;}
+
+.progress {
+  background-color: #FFF;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

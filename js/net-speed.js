@@ -136,9 +136,11 @@ $(function() {
 
 
 });
+var isp = null,
+  loc = 0,
+  fileno = 0;
 
 function getDetails() {
-  var isp = null;
   $.getJSON("http://ip-api.com/json",
     function(data) {
       isp = data.isp;
@@ -149,18 +151,50 @@ function getDetails() {
 
 }
 
+function getISP() {
+  $.getJSON("http://ip-api.com/json",
+    function(data) {
+      isp = data.isp;
+    });
+
+}
+
 function getip() {
   return (myip);
 }
 
 function getServerURL(location) {
   var endpoint = 'http://95.211.150.11/TRCDF/';
-  if (location == 'USA'){
-  endpoint = 'http://207.244.91.98/TRCDF/';
+  if (location == 'USA') {
+    loc = 3
+    endpoint = 'http://207.244.91.98/TRCDF/';
+  }
+  if (location == 'Singapore') {  
+    loc = 1
+  }
+  if (location == 'Netherlands') {
+    loc = 2
   }
   return endpoint;
-  
-  
+
+
+}
+
+function setFileNo(fileName) {
+  if (fileName == '10MB.zip') {
+    fileno = 1;
+    endpoint = 'http://207.244.91.98/TRCDF/';
+  }
+  if (fileName == '35MB.zip') {
+    fileno = 2;
+  }
+  if (fileName == '100MB.zip') {
+    fileno = 3;
+  }
+  if (fileName == '512MB.zip') {
+    fileno = 4;
+  }
+
 }
 
 function testURL() {
@@ -214,9 +248,6 @@ function setMeterZero() {
   chart = $('#container').highcharts();
   point = chart.series[0].points[0];
   point.update(0);
-
-
-
 }
 
 function show(name) {
@@ -234,37 +265,60 @@ function loaddashboard() {
     if (statusTxt == "error")
       alert("Error: " + xhr.status + ": " + xhr.statusText);
   });
-
 }
 myToken = null;
-function getToken() {
-var ip = getip();
-if(typeof(Storage) !== "undefined") {
 
-	myToken = localStorage.getItem("myToken");
-}
-if(myToken == null){
-  $.post("http://localhost:3000/api/net_speeds",{ 'ip':ip},
-    function(data) {
-	if(typeof(Storage) !== "undefined") {
-    // Code for localStorage/sessionStorage.
-	myToken = data.Token;
-	localStorage.setItem("myToken", myToken);
-} else {
-    // Sorry! No Web Storage support..
-	myToken = data.Token;
-}
-	  myToken = data.Token;
-      console.log(data.Token);
-    });
-	}
+function getToken() {
+  var ip = getip();
+
+  if (myToken == null) {
+    getISP();
+    $.post("http://localhost:3000/api/net_speeds", {
+        'ip': ip
+      },
+      function(data) {
+        if (typeof(Storage) !== "undefined") {
+          // Code for localStorage/sessionStorage.
+          myToken = data.Token;
+          localStorage.setItem("myToken", myToken);
+        } else {
+          // Sorry! No Web Storage support..
+          myToken = data.Token;
+        }
+        myToken = data.Token;
+        console.log(data.Token);
+      });
   }
+}
+
+function updateStatistics(speed, isp) {
+  var ip = getip();
+  if (myToken !== null) {
+    $.ajax({
+      url: 'http://localhost:3000/api/net_speeds',
+      type: 'PUT',
+      data: {
+        'ip': ip,
+        'token': myToken,
+        'isp': isp,
+        'speed': speed,
+        'loc': 'l' + loc + 'f' + fileno
+      },
+      success: function(data) {
+        console.log(data);
+      }
+    });
+
+
+  }
+}
+
 var filelocation = null;
 
 function test(filename, location) {
   filelocation = location;
   setMeterZero();
-getToken();
+  getToken();
   var d = new Date();
   var n = d.getTime();
   //console.log("----------My Speed - console ----------");
@@ -274,12 +328,13 @@ getToken();
   var startTime = new Date().getTime();
   filename = $('input[name=optradio]:checked').val() + 'MB' + filename
   console.log(filename);
+  setFileNo(filename);
   //var usurl = 'http://207.244.91.98/TRCDF/10MB.zip';
-  xhr.open('GET', getServerURL(location)+'' + filename + '?' + n, true);
+  xhr.open('GET', getServerURL(location) + '' + filename + '?' + n, true);
 
   console.log("Speed By Megabits Per Second");
 
-  
+
 
 
   // progress on transfers from the server to the client (downloads)
@@ -326,7 +381,9 @@ getToken();
   }
 
   function resetProgressBar() {
-
+$(".progress").css("background-color", "#f5f5f5");
+$(".progress").css("-webkit-box-shadow", "inset 0 1px 2px rgba(0, 0, 0, .1)");
+$(".progress").css("box-shadow", "inset 0 1px 2px rgba(0, 0, 0, .1)");
     $("#msgbar").hide();
     $("#msgbar").html('..')
     $('.progress-bar').attr('class', 'progress-bar progress-bar-default progress-bar-striped');
@@ -346,6 +403,7 @@ getToken();
     point.update(0);
     $("#msgbar").html('<strong>Your Speed is ' + mySpeed + ' Mbps</strong><br>Your IP address: ' + getip() + '<br>Date and Time of Test: ' + getDateTime() + '<br>Download Server Location: ' + filelocation + '<br>Tested File Size: ' + testedfilesize + 'MB');
     getDetails();
+    updateStatistics(mySpeed, isp);
     $('.progress-bar').attr('class', 'progress-bar progress-bar-success progress-bar-striped');
 
   }
